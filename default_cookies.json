@@ -1,0 +1,162 @@
+[
+  {
+    "name": "JSESSIONID",
+    "value": "ajax:0694769846961603537",
+    "domain": ".www.linkedin.com",
+    "path": "/",
+    "expires": -1,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "lang",
+    "value": "v=2&lang=en-us",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": -1,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "bcookie",
+    "value": "\"v=2&cb0f953e-07ec-4b86-80b0-7805f738cbfa\"",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1783924398.574041,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "bscookie",
+    "value": "\"v=1&20250713063308a1dd82d0-db2c-45cc-8692-c4a34076122bAQG4OYOYwqkQiDb-VzTlTpYaFcqrGMs4\"",
+    "domain": ".www.linkedin.com",
+    "path": "/",
+    "expires": 1783924398.574105,
+    "httpOnly": true,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "lidc",
+    "value": "\"b=TGST07:s=T:r=T:a=T:p=T:g=3126:u=1:x=1:i=1752388388:t=1752474788:v=2:sig=AQFrlv2JmZ6_1lKdfHQOCuHXO9xK9C-i\"",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1752474784.758116,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "demdex",
+    "value": "82505856146791658590824822972696129913",
+    "domain": ".demdex.net",
+    "path": "/",
+    "expires": 1767940400.673182,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "AMCVS_14215E3D5995C57C0A495C55%40AdobeOrg",
+    "value": "1",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": -1,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "AMCV_14215E3D5995C57C0A495C55%40AdobeOrg",
+    "value": "-637568504%7CMCIDTS%7C20283%7CMCMID%7C82643437538019062800845958899693552306%7CMCAAMLH-1752993185%7C12%7CMCAAMB-1752993185%7C6G1ynYcLPuiQxYZrsz_pkqfLG9yMXBpb2zX5dvJdYQJzPXImdj0y%7CMCOPTOUT-1752395585s%7CNONE%7CvVersion%7C5.1.1",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1767940385,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "barometric[cuid]",
+    "value": "cuid_68735327-6df1-4011-a730-7a1e81522faa",
+    "domain": ".trkn.us",
+    "path": "/",
+    "expires": 1783924386.169184,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "aam_uuid",
+    "value": "82505856146791658590824822972696129913",
+    "domain": ".linkedin.com",
+    "path": "/",
+    "expires": 1754980400,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "dextp",
+    "value": "771-1-1752388386175|1957-1-1752388386291",
+    "domain": ".demdex.net",
+    "path": "/",
+    "expires": 1767940386,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "MUID",
+    "value": "3BDAC39B2E816FAC02ACD5B32FE36E22",
+    "domain": ".bing.com",
+    "path": "/",
+    "expires": 1786084386.544239,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "MR",
+    "value": "0",
+    "domain": ".c.bing.com",
+    "path": "/",
+    "expires": 1752993186.544304,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "dpm",
+    "value": "82505856146791658590824822972696129913",
+    "domain": ".dpm.demdex.net",
+    "path": "/",
+    "expires": 1767940387.671937,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "IDE",
+    "value": "AHWqTUlnd9XdhZFSucVuC9D0pTy4Qzzn5GhX_j6CwbFgCq2EmL0WVM2s3x7njfvJhfg",
+    "domain": ".doubleclick.net",
+    "path": "/",
+    "expires": 1786948387.576927,
+    "httpOnly": true,
+    "secure": true,
+    "sameSite": "None"
+  },
+  {
+    "name": "li_rm",
+    "value": "AQGxx8LEqM3FuAAAAZgCfQDhjVakXrGVreE4cjUC5F2THywHGvDRzoY2RcOSsouV3EoG0Ad4jHeNWQH1LNHosj1XNto-1BULkwTF1xmoP6ZE4ovvBMq4jOmu",
+    "domain": ".www.linkedin.com",
+    "path": "/",
+    "expires": 1783924398.573968,
+    "httpOnly": true,
+    "secure": true,
+    "sameSite": "None"
+  }
+]
