@@ -135,7 +135,7 @@ def cookie_create(USERNAME, PASSWORD, MFA_KEY):
         # Return error message with details
         return "error: " + str(e).strip()
 
-if __name__ == "__main__":
-    USERNAME = "test@gmail.com"
-    PASSWORD = "test1234"
-    MFA_KEY = "ZZC6C6W563QK2FSH64FAHBURHTKX27CD"
+# if __name__ == "__main__":
+#     USERNAME = "test@gmail.com"
+#     PASSWORD = "test1234"
+#     MFA_KEY = "ZZC6C6W563QK2FSH64FAHBURHTKX27CD"
