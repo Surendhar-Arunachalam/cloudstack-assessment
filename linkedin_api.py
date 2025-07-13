@@ -1,30 +1,43 @@
 import json
 import requests
 import urllib3
+import os
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from flask import Flask, request, jsonify
 from linkedin_login import cookie_create
 
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 app = Flask(__name__)
 BASE_URL = "https://www.linkedin.com/voyager/api/relationships/dash/connections"
 
 
-# Load existing cookies from local file
-cookie_file = 'cookies.json'
-def load_cookies(cookie_file):
+# Load cookies for given username
+def load_cookies(username_input):
+    cookie_file = 'cookies.json'
+    cookie_str = csrf_token = username = None
+
+    # Create empty cookie file if not exists
+    if not os.path.exists(cookie_file):
+        with open(cookie_file, 'w', encoding='utf-8') as f:
+            json.dump([], f, indent=2)
+            return cookie_str, csrf_token, username
+
+    # Read and find matching user cookie
     try:
         with open(cookie_file, 'r', encoding='utf-8') as f:
             cookies = json.load(f)
-        cookie_str = '; '.join(f'{c["name"]}={c["value"]}' for c in cookies)
-        csrf_token = next((c["value"].strip('"') for c in cookies if c["name"] == "JSESSIONID"), "")
-        profile_name_cookie = next((c["value"].strip('"') for c in cookies if c["name"] == "profile"), "")
-    except:
-        cookie_str = csrf_token = profile_name_cookie = None
-    return cookie_str, csrf_token, profile_name_cookie
+            for cookie_iter in cookies:
+                if cookie_iter['username'] == username_input:
+                    cookie_str = cookie_iter['cookie']
+                    csrf_token = cookie_iter['csrf-token']
+                    username = cookie_iter['username']
+                    break
+    except Exception as e:
+        print(e)
+    return cookie_str, csrf_token, username
 
 
-# Header parameters for requests
+# Return standard LinkedIn headers
 def get_headers():
     return {
         'accept': 'application/vnd.linkedin.normalized+json+2.1', 'accept-language': 'en-US,en;q=0.9',
@@ -38,30 +51,20 @@ def get_headers():
     }
 
 
+# API endpoint to get LinkedIn connections
 @app.route("/linkedin/connections", methods=["POST"])
 def get_linkedin_connections():
-    # Get username and password from form
-    username = request.form.get("username")
+    # Get form inputs
+    username_input = request.form.get("username")
     password = request.form.get("password")
-    session_persistence = request.form.get("session_persistence")
+    mfa_key = request.form.get("mfa_key")
 
-    # Return error message if username or password is empty
-    if not username or not password:
-        return jsonify({"status": "error", "message": "Missing username or password"}), 400
+    # Validate inputs
+    if not username_input or not password or not mfa_key:
+        return jsonify({"status": "error", "message": "Missing username or password or mfa key"}), 400
 
     try:
-        # Step 1: Login and save cookies
-        if session_persistence == 'False':
-            cookie_create(username, password)
-
-        # Step 2: Load cookies and make request
-        cookie_str, csrf_token, login_profile_name = load_cookies(cookie_file)
-        headers = get_headers()
-        if cookie_str is not None and csrf_token is not None:
-            headers['cookie'] = cookie_str
-            headers['csrf-token'] = csrf_token
-        # else:
-        #     cookie_create(username, password)
+        # LinkedIn API query params
         params = {
             "decorationId": "com.linkedin.voyager.dash.deco.web.mynetwork.ConnectionList-16",
             "count": "100",
@@ -70,28 +73,40 @@ def get_linkedin_connections():
             "start": "0"
         }
 
-        # Step 3: Requests for connections URL to retrieve results with existing cookies
-        response = requests.get(BASE_URL, headers=headers, params=params, verify=False)
-        if response.status_code != 200:
-            login_profile_name = cookie_create(username, password)
-            cookies = json.loads(open('cookies.json', 'r', encoding='utf-8').read())
-            cookie_str = ''
-            for cookie_iter in cookies:
-                if cookie_iter["name"] == "JSESSIONID":
-                    csrf_token = cookie_iter["value"].strip('"')
-                cookie_str += cookie_iter["name"].strip() + "=" + cookie_iter["value"].strip() + '; '
+        # Try loading cookies
+        cookie_str, csrf_token, username = load_cookies(username_input)
+        headers = get_headers()
+
+        # If cookies available, use them
+        if cookie_str and csrf_token:
+            headers['cookie'] = cookie_str
+            headers['csrf-token'] = csrf_token
+        else:
+            # Create cookies if not found
+            cookie_create(username_input, password, mfa_key)
+            cookie_str, csrf_token, username = load_cookies(username_input)
             headers['cookie'] = cookie_str
             headers['csrf-token'] = csrf_token
 
-        # Step 4: Requests for connections URL to retrieve results with new cookies
+        # Send request to LinkedIn Voyager API
         response = requests.get(BASE_URL, headers=headers, params=params, verify=False)
+
+        # If failed, try refreshing cookie
+        if response.status_code != 200:
+            cookie_create(username_input, password, mfa_key)
+            cookie_str, csrf_token, username = load_cookies(username_input)
+            headers['cookie'] = cookie_str
+            headers['csrf-token'] = csrf_token
+            # Again sending request to LinkedIn Voyager API with updated cookies
+            response = requests.get(BASE_URL, headers=headers, params=params, verify=False)
+
+        # If success, extract and return profiles
         if response.status_code == 200:
             data = response.json()
-            included = data.get("included", [])
-            profiles = [item for item in included if item.get("$type") == "com.linkedin.voyager.dash.identity.profile.Profile"]
-
             profile_list = []
-            profile_list.append({'logged_in_user': login_profile_name})
+            included = data.get("included", [])
+            profiles = [item for item in included if
+                        item.get("$type") == "com.linkedin.voyager.dash.identity.profile.Profile"]
             for profile_iter in profiles:
                 profile_list.append({"name": profile_iter["profilePicture"]["a11yText"],
                                      "url": "https://www.linkedin.com/in/" + profile_iter["publicIdentifier"],
@@ -100,16 +115,18 @@ def get_linkedin_connections():
             return jsonify({
                 "status": "success",
                 "message": "Connections fetched successfully.",
-                "data": profile_list
+                "data": profile_list,
+                "account_logged_in_user": username,
             }), 200
-        # Return error message
         else:
+            # Return error message
             return jsonify({
                 "status": "error",
                 "message": f"LinkedIn API failed with status {response.status_code}"
             }), response.status_code
 
     except Exception as e:
+        # Return error message
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
