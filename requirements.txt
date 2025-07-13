@@ -1,4 +1,6 @@
 Flask==2.1.2
 playwright==1.35.0
+playwright-stealth==1.0.6
 requests==2.27.1
 urllib3==1.25.11
+pyotp==2.9.0
